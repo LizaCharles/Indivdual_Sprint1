@@ -5,6 +5,11 @@
       <input type="text" v-model= "postBody.ProductName">   ProductName <br>
       <input type="text" v-model= "postBody.ProductPrice">   ProductPrice <br>
       <button @click="postPost()"> Create A product  </button>
+      <li v-for="post in posts.data">
+        <h8> ProductName:  {{ post.name}} Price:{{post.price}} Creation_Date:{{post.createdAt}} UpdatedAt:{{post.updatedAt}} SellerName:"Liza Charles" ProductId:{{post._id}}</h8>
+      </li>
+
+
              <ul v-if="errors && errors.length">
              <li v-for="error of errors">
              {{error.message}}
@@ -15,15 +20,6 @@
 <br>
 <br>
 <br>
-<br>
-<br>
-<input type="text" v-model= "postBody.searchID" > Search For Product <br>
-<button @click="Search()" > Search  </button>
-       <ul v-if="errors && errors.length">
-       <li v-for="error of errors">
-       {{error.message}}
-       </li>
-       </ul>
 
 <br>
 <br>
@@ -54,16 +50,33 @@
 <input type="text" v-model= "postBody.delID" > ID  <br>
 <button @click="del" > delete Product  </button>
 
-   <li v-for="post in posts.data">
-     <h8> ProductName:  {{ post.name}} Price:{{post.price}} Creation_Date:{{post.createdAt}} UpdatedAt:{{post.updatedAt}} SellerName:"Liza Charles" ProductId:{{post._id}}</h8>
-   </li>
 
  <ul v-if="errors && errors.length">
    <li v-for="error of errors">
      {{error.message}}
    </li>
  </ul>
+
+
+<br><br><br><br><br><br>
+
+<input type="text" v-model= "postBody.search" > Search For Product By Name <br>
+<h8 v-for="post in posts.data" v-if="postBody.search === post.name" >
+   ProductName:  {{ post.name}} Price:{{post.price}} Creation_Date:{{post.createdAt}} UpdatedAt:{{post.updatedAt}} SellerName:"Liza Charles" ProductId:{{post._id}}
+ </h8>
+
  <br>
+ <br>
+ <br>
+
+
+        <ul v-if="errors && errors.length">
+        <li v-for="error of errors">
+        {{error.message}}
+        </li>
+        </ul>
+
+  </div>
 
   </div>
 
@@ -85,7 +98,8 @@ export default {
         updatedPrice: '',
         delID: '',
         updID: '',
-        searchID: ''
+        searchID: '',
+        search: ''
       },
       posts: [],
       errors: []
@@ -112,6 +126,7 @@ export default {
     .catch(e => {
       this.errors.push(e)
     })
+      window.location.reload()
     },
     upd () {
       axios.patch(`http://localhost:3000/api/Product/updateProduct` + '/' + this.postBody.updID, {
@@ -135,8 +150,8 @@ export default {
 })
       window.location.reload()
     },
-    Search () {
-      axios.get('http://localhost:3000/api/product/getProducts' + '/' + this.postBody.searchID)
+    SearchForProduct () {
+      axios.get('http://localhost:3000/api/product/getProduct' + '/' + this.postBody.searchID)
   .then(response => {
     console.log(response)
   })
